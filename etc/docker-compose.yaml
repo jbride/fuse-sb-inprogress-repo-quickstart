@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+
+  psql:
+    container_name: psql
+    image: registry.redhat.io/rhel8/postgresql-12
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      PGPORT: 5432
+      POSTGRESQL_USER: rht
+      POSTGRESQL_PASSWORD: rht
+      POSTGRESQL_DATABASE: rht
+      POSTGRESQL_MAX_PREPARED_TRANSACTIONS: 10
+      SCRIPT_DIR: /opt/sql
+    volumes:
+    - ./db/psql.conf:/opt/app-root/src/postgresql-cfg/psql.conf:bind
+    - ./db/sql/:/opt/sql:bind
+    - ./db/create_database.sh:/opt/app-root/src/postgresql-start/create_database.sh:bind
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
+

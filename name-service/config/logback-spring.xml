@@ -20,4 +20,7 @@
   <logger name="org.apache.camel.processor.idempotent.jdbc" level="debug" additivity="false">
     <appender-ref ref="stdout" />
   </logger>
+  <logger name="org.apache.camel.component.file" level="debug" additivity="false">
+    <appender-ref ref="stdout" />
+  </logger>
 </configuration>
