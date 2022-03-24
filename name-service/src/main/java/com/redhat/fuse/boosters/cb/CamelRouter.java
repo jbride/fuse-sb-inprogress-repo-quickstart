@@ -6,6 +6,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -25,10 +26,19 @@ public class CamelRouter extends RouteBuilder {
     @Autowired
     DataSource dataSource;
 
+    @Value("${com.redhat.test.processor.name}")
+    private String processorName;
+
+
     @Bean(name="inProgressRepo")
-    public IdempotentRepository inProgressRepo() {
-        IdempotentRepository jRepo = new JdbcOrphanLockAwareIdempotentRepository(dataSource, "myProcessor", new DefaultCamelContext());
-        //IdempotentRepository jRepo = new JdbcMessageIdRepository(dataSource, "myProcessor");
+    public JdbcOrphanLockAwareIdempotentRepository inProgressRepo() {
+        JdbcOrphanLockAwareIdempotentRepository jRepo = new JdbcOrphanLockAwareIdempotentRepository(dataSource, processorName, new DefaultCamelContext());
+
+        // Set to 5 minutes
+        // If after 5 minutes of no update to createdat field in DB, then any processor can re-attempt processing of orphaned file
+        jRepo.setLockMaxAgeMillis(30000l);
+
+        jRepo.setLockKeepAliveIntervalMillis(3000L);
         return jRepo;
     }
 
@@ -36,11 +46,14 @@ public class CamelRouter extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        //from("file:///tmp/na/input?delay=1000&autoCreate=true&delete=false")
-        from("file:///tmp/na/input?inProgressRepository=#inProgressRepo&delay=1000&autoCreate=true&delete=false")
+        // By default, Camel will move consumed files to the .camel sub-folder relative to the directory where the file was consumed.
+        // Any move or delete operations is executed after (post command) the routing has completed; so during processing of the Exchange the file is still located in the inbox folder.
+
+        //from("file:///tmp/na/input?delay=5000&autoCreate=true&delete=false")
+        from("file:{{com.redhat.test.dir.location}}?inProgressRepository=#inProgressRepo&delay=5000&autoCreate=true&delete=false")
             .routeId("direct:fileConsumer")
             .log("file = ${header.CamelFileName}}")
-            .delay(15000)
+            .delay(simple("{{com.redhat.test.delay.millis}}"))
             .end();
     }
 

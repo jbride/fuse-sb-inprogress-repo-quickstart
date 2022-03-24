@@ -60,8 +60,6 @@ public class JdbcOrphanLockAwareIdempotentRepository extends JdbcMessageIdReposi
 
     private CamelContext context;
 
-
-
     /** Max age of read lock in milliseconds **/
     private long lockMaxAgeMillis = 1500L;
 
