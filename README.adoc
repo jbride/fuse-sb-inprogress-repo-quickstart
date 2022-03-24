@@ -30,7 +30,17 @@ Back-ported to camel-2.23.2  (the version of camel leveraged in Fuse 2.10)
 
 For any of the tests listed below, change into the directory specific to the type of _inProgressRepo_ of interest.
 
-=== Single Node
+=== State Management Startup
+
+For the purpose of facilitating testing, both a PostgreSQL and Redis are provided in this quickstart via _docker-compose.
+
+To start them, execute the following:
+
+-----
+$ docker-compose -f etc/docker-compose.yaml up -d
+-----
+
+=== Single Node Tests
 
 . Command-line:
 +
@@ -54,7 +64,7 @@ $ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8080 --com.redh
 .. Additional orphan lock added to database;
 .. File successfully processed and both records deleted from camel_messageprocessed db
 
-=== Multi Node
+=== Multi Node Tests
 
 . Command-line:
 +
@@ -81,3 +91,19 @@ $ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8081 --com.redh
 .. Additional orphan lock added to database;
 .. File successfully processed and both records deleted from camel_messageprocessed db
 
+== Redis cheatsheet
+
+. Delete all lingering cache files:
++
+-----
+$ rm redis-file-service/cache/*.rdb
+-----
+
+. List all keys:
++
+-----
+$ podman exec -it redis /bin/sh
+/data # redis-cli --pass admin
+>  KEYS *
+
+-----

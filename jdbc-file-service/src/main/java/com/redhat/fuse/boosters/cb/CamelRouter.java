@@ -31,9 +31,9 @@ public class CamelRouter extends RouteBuilder {
     public JdbcOrphanLockAwareIdempotentRepository inProgressRepo() {
         JdbcOrphanLockAwareIdempotentRepository jRepo = new JdbcOrphanLockAwareIdempotentRepository(dataSource, processorName, new DefaultCamelContext());
 
-        // Set to 5 minutes
-        // If after 5 minutes of no update to createdat field in DB, then any processor can re-attempt processing of orphaned file
-        jRepo.setLockMaxAgeMillis(30000l);
+        // Set to 90 seconds
+        // If after 90 seconds of no update to createdat field in DB, then any processor can re-attempt processing of orphaned file
+        jRepo.setLockMaxAgeMillis(90000l);
 
         jRepo.setLockKeepAliveIntervalMillis(3000L);
         return jRepo;

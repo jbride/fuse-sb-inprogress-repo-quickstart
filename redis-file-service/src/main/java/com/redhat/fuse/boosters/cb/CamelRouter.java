@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class CamelRouter extends RouteBuilder {
 
     @Autowired
-    RedisTemplate rTemplate;
+    RedisTemplate<String, String> rTemplate;
 
     @Value("${com.redhat.test.processor.name}")
     private String processorName;
@@ -25,9 +25,9 @@ public class CamelRouter extends RouteBuilder {
 
         RedisStringIdempotentRepository jRepo = new RedisStringIdempotentRepository(rTemplate, processorName);
 
-        // Set to 5 minutes
-        // If after 5 minutes of no update to createdat field in DB, then any processor can re-attempt processing of orphaned file
-        jRepo.setExpiry(30000l);
+        // Set to 90 seconds
+        // If after 90 seconds of no update to createdat field in DB, then any processor in cluster can re-attempt processing of orphaned file
+        jRepo.setExpiry(90l);
 
         return jRepo;
     }
