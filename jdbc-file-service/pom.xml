@@ -6,7 +6,7 @@
     <artifactId>fuse-sb-inprogress-repo-quickstart</artifactId>
     <version>1.0.0</version>
   </parent>
-  <artifactId>name-service</artifactId>
+  <artifactId>jdbc-file-service</artifactId>
   <name>Fuse :: Boosters :: Springboot :: Circuit Breaker :: Name service</name>
   <dependencies>
 

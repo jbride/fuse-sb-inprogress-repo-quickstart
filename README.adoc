@@ -5,25 +5,26 @@
 :numbered:
 
 == Overview
-The Camel file component provides a link:https://camel.apache.org/components/3.15.x/eips/idempotentConsumer-eip.html#_idempotent_consumer_implementations[variety of options] for enabling it for a high-available environment. The purpose of this quickstart is to demonstrate the file component enabled with the JdbcOrphanLockAwareIdempotentRepository class.
+The Camel file component provides a link:https://camel.apache.org/components/3.15.x/eips/idempotentConsumer-eip.html#_idempotent_consumer_implementations[variety of options] for enabling it for a high-available environment. The purpose of this quickstart is to demonstrate the file component enabled with a variety of these external state management tools.
 
 
 
 This project includes the following:
 
-. Containerized PostgreSQL database 
+. Containerized state mgmt tools:
+.. PostgreSQL database 
 +
-This database will maintain the HA management state of the file component used in this quickstart
+This database will maintain the HA management state of the file component used in the _jdbc-file-service_ quickstart.
 
 . Fuse route with file component
 +
 This file component is enabled for HA by leveraging _JdbcOrphanLockAwareIdempotentRepository_
 
-. _JdbcOrphanLockAwareIdempotentRepository_ class
-+
-Back-ported to camel-2.23.2  (leveraged in Fuse 2.10)
-
 . Test results in both single and multi-node setup
+
+. jdbc-file-service specific:  _JdbcOrphanLockAwareIdempotentRepository_ class
++
+Back-ported to camel-2.23.2  (the version of camel leveraged in Fuse 2.10)
 
 == Testing
 
