@@ -1,8 +1,33 @@
-= Testing
+= Fuse on SpringBoot
+
+*File InProgressRepo Quickstart*
 
 :numbered:
 
-== Single Node
+== Overview
+The Camel file component provides a link:https://camel.apache.org/components/3.15.x/eips/idempotentConsumer-eip.html#_idempotent_consumer_implementations[variety of options] for enabling it for a high-available environment. The purpose of this quickstart is to demonstrate the file component enabled with the JdbcOrphanLockAwareIdempotentRepository class.
+
+
+
+This project includes the following:
+
+. Containerized PostgreSQL database 
++
+This database will maintain the HA management state of the file component used in this quickstart
+
+. Fuse route with file component
++
+This file component is enabled for HA by leveraging _JdbcOrphanLockAwareIdempotentRepository_
+
+. _JdbcOrphanLockAwareIdempotentRepository_ class
++
+Back-ported to camel-2.23.2  (leveraged in Fuse 2.10)
+
+. Test results in both single and multi-node setup
+
+== Testing
+
+=== Single Node
 
 . Command-line:
 +
@@ -26,7 +51,7 @@ $ mvn spring-boot:run -Dspring-boot.run.arguments="--server.port=8080 --com.redh
 .. Additional orphan lock added to database;
 .. File successfully processed and both records deleted from camel_messageprocessed db
 
-== Multi Node
+=== Multi Node
 
 . Command-line:
 +
