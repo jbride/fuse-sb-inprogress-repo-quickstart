@@ -1,41 +1,34 @@
 package com.redhat.fuse.boosters.cb;
 
-import javax.sql.DataSource;
-
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.redis.processor.idempotent.RedisStringIdempotentRepository;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-
-// Not available in Camel 2.23..2  (Fuse 7.10)
-import org.apache.camel.processor.idempotent.jdbc.JdbcOrphanLockAwareIdempotentRepository;
-
-import org.apache.camel.processor.idempotent.jdbc.JdbcMessageIdRepository;
-import org.apache.camel.spi.IdempotentRepository;
 
 @Component
 public class CamelRouter extends RouteBuilder {
 
     @Autowired
-    DataSource dataSource;
+    RedisTemplate rTemplate;
 
     @Value("${com.redhat.test.processor.name}")
     private String processorName;
 
 
-    // Reference:  https://camel.apache.org/components/3.15.x/sql-component.html#_using_the_jdbc_based_idempotent_repository
     @Bean(name="inProgressRepo")
-    public JdbcOrphanLockAwareIdempotentRepository inProgressRepo() {
-        JdbcOrphanLockAwareIdempotentRepository jRepo = new JdbcOrphanLockAwareIdempotentRepository(dataSource, processorName, new DefaultCamelContext());
+    public RedisStringIdempotentRepository inProgressRepo() {
+
+        RedisStringIdempotentRepository jRepo = new RedisStringIdempotentRepository(rTemplate, processorName);
 
         // Set to 5 minutes
         // If after 5 minutes of no update to createdat field in DB, then any processor can re-attempt processing of orphaned file
-        jRepo.setLockMaxAgeMillis(30000l);
+        jRepo.setExpiry(30000l);
 
-        jRepo.setLockKeepAliveIntervalMillis(3000L);
         return jRepo;
     }
 

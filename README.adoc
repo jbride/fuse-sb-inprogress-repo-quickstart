@@ -26,7 +26,9 @@ This file component is enabled for HA by leveraging _JdbcOrphanLockAwareIdempote
 +
 Back-ported to camel-2.23.2  (the version of camel leveraged in Fuse 2.10)
 
-== Testing
+== Test
+
+For any of the tests listed below, change into the directory specific to the type of _inProgressRepo_ of interest.
 
 === Single Node
 
