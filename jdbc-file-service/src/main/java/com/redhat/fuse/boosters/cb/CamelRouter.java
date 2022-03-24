@@ -30,6 +30,7 @@ public class CamelRouter extends RouteBuilder {
     private String processorName;
 
 
+    // Reference:  https://camel.apache.org/components/3.15.x/sql-component.html#_using_the_jdbc_based_idempotent_repository
     @Bean(name="inProgressRepo")
     public JdbcOrphanLockAwareIdempotentRepository inProgressRepo() {
         JdbcOrphanLockAwareIdempotentRepository jRepo = new JdbcOrphanLockAwareIdempotentRepository(dataSource, processorName, new DefaultCamelContext());
