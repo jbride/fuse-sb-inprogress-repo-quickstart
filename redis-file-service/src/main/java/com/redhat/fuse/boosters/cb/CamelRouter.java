@@ -26,7 +26,7 @@ public class CamelRouter extends RouteBuilder {
         RedisStringIdempotentRepository jRepo = new RedisStringIdempotentRepository(rTemplate, processorName);
 
         // Set to 90 seconds
-        // If after 90 seconds of no update to createdat field in DB, then any processor in cluster can re-attempt processing of orphaned file
+        // If after 90 seconds of no update to relevant entry in Redis, then any processor in cluster can re-attempt processing of orphaned file
         jRepo.setExpiry(90l);
 
         return jRepo;
