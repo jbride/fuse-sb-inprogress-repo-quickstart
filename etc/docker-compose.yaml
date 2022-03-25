@@ -35,6 +35,18 @@ services:
     volumes: 
       - ../redis-file-service/cache:/data
 
+  infinispan:
+    container_name: infinispan
+    image: quay.io/infinispan/server:13.0
+    restart: always
+    ports:
+      - "11222:11222"
+    environment:
+      USER: rht
+      PASS: rht
+    networks:
+      - default
+
 networks:
   default:
     driver: bridge
