@@ -16,6 +16,10 @@ This project includes the following:
 +
 This database will maintain the HA management state of the file component used in the _jdbc-file-service_ quickstart.
 
+.. Redis cache
++
+This cache will maintain the HA management state of the file component used in the _redis-file-service_quickstart.
+
 . Fuse route with file component
 +
 This file component is enabled for HA by leveraging _JdbcOrphanLockAwareIdempotentRepository_
